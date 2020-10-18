@@ -29,6 +29,7 @@ class ViewWorker(QRunnable):
                 except BlockingIOError:
                     pass
             if residual_string:
+                processed_string = ""
                 res_split = residual_string.splitlines()
                 if res_split:
                     # print(res_split) #debug
@@ -54,6 +55,8 @@ class ViewWorker(QRunnable):
                             self.fi.canvas.draw()
                             self.fi.canvas.flush_events()
                         else:
-                            ''' Catch the residual part of the string and the 
-                                next part of the string will be attached to it. '''
-                            residual_string = element
+                            if re.match("^[0-9]", element):
+                                ''' Catch the residual part of the string and the 
+                                    next part of the string will be attached to it. '''
+                                processed_string = element
+                    residual_string = processed_string
