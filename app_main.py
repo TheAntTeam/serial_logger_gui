@@ -40,7 +40,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # Visualization Worker Thread, started as soon as
         # the thread pool is started. Pass the figure to plot on.
         # self.viewWo = ViewWorker(self.serialRxQu, fig, line1) # debug with an external figure.
-        self.viewWo = ViewWorker(self.serialRxQu, self.canvas.figure, line2)
+        self.viewWo = ViewWorker(self.serialRxQu, self.canvas.figure, line2,
+                                 self.actual_temp_label,
+                                 self.actual_time_label,
+                                 self.actual_target_label)
 
         self.threadpool = QThreadPool()
         self.threadpool.start(self.viewWo)

@@ -4,13 +4,16 @@ import re
 
 class ViewWorker(QRunnable):
     """View Worker thread"""
-    def __init__(self, serial_rx_queue, fig, line1, *args, **kwargs):
+    def __init__(self, serial_rx_queue, fig, line1, actual_temp_label, actual_time_label, actual_target_label, *args, **kwargs):
         super(ViewWorker, self).__init__()
         self.args = args
         self.kwargs = kwargs
         self.serialQueue = serial_rx_queue
         self.fi = fig
         self.lin = line1
+        self.temp_label = actual_temp_label
+        self.time_label = actual_time_label
+        self.target_label = actual_target_label
 
     @Slot()
     def run(self):
@@ -38,10 +41,17 @@ class ViewWorker(QRunnable):
                         element = res_split.pop(0)
                         if re.match(matcher_str, element):
                             [time, temp, target, duty_cycle] = element.split(",")
-                            time_ls.append(float(time) + 1)
-                            temp_ls.append(float(temp))
-                            self.lin.set_ydata(temp_ls)
+                            time_sec = float(time)/1000
+                            temp_c = float(temp)
+                            target_c = float(target)
+                            time_ls.append(time_sec)
+                            temp_ls.append(temp_c)
+                            target_ls.append(target_c)
                             self.lin.set_xdata(time_ls)
+                            self.lin.set_ydata(temp_ls)
+                            self.time_label.setText(format(time_sec, '.1f'))
+                            self.temp_label.setText(format(temp_c, '.2f'))  # Set the label with a float with 2 decimals
+                            self.target_label.setText(format(target_c, '.2f'))
                             min_x = min(self.lin.get_xdata())
                             max_x = max(self.lin.get_xdata())
                             min_y = min(self.lin.get_ydata())
