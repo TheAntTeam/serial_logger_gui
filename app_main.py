@@ -5,7 +5,7 @@ import os
 os.environ['QT_API'] = 'pyside2'
 # Imports from qtpy #
 from qtpy import QtGui, QtWidgets, uic
-from qtpy.QtCore import QThreadPool
+from qtpy.QtCore import QThreadPool, QObject, QFile
 from queue import Queue
 
 # Custom imports #
@@ -26,6 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.refreshButton.clicked.connect(self.handle_refresh_button)
         self.connectButton.clicked.connect(self.handle_connect_button)
         self.disconnectButton.clicked.connect(self.handle_disconnect_button)
+        self.actionSave.triggered.connect(self.save_file)
 
         axes = self.canvas.figure.add_subplot(1, 1, 1)
         line2, = axes.plot([], [])
@@ -76,6 +77,15 @@ class MainWindow(QtWidgets.QMainWindow):
         """Disconnect button closes the serial port."""
         self.serialWo.close_port()
 
+    def save_file(self):
+        save_file_path = QtWidgets.QFileDialog.getSaveFileName(self, self.tr("Load Image"),
+                                                                     self.tr("~/Desktop/"),
+                                                                     self.tr("CSV (*.csv)"))
+        print(save_file_path)
+        # f = QFile(save_file_path)
+        # try:
+        #     f.open()
+
     # Debug function
     # def text_changed(self):
     #     print("Text changed:")
@@ -83,7 +93,8 @@ class MainWindow(QtWidgets.QMainWindow):
     #     self.serialWo.set_actual_port(self.serialPortsComboBox.currentText())
 
 
-app = QtWidgets.QApplication(sys.argv)
-window = MainWindow()
-window.show()
-app.exec_()
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec_()
