@@ -42,6 +42,7 @@ class SerialWorker(QRunnable):
     def run(self):
         """Serial Worker Runner function."""
         print("Init Serial Worker Thread")
+        residual_string = ""
         while True:
             if self.is_paused:
                 if self.close_it:
@@ -54,6 +55,8 @@ class SerialWorker(QRunnable):
                         data_out = self.serial_ch.active_port.read(bytes_to_read)
                         if data_out:
                             # print(data_out.decode("utf-8", "ignore"))
+                            res_split = data_out.decode("utf-8", "ignore").splitlines(True)
+                            print(res_split)
                             self.serialQueue.put(data_out.decode("utf-8", "ignore"))
 
     def thread_is_started(self):

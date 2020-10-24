@@ -4,8 +4,8 @@ import os
 # Choose 'pyqt5' or 'pyside2'
 os.environ['QT_API'] = 'pyside2'
 # Imports from qtpy #
-from qtpy import QtGui, QtWidgets, uic
-from qtpy.QtCore import QThreadPool, QObject, QFile
+from qtpy import QtWidgets, uic
+from qtpy.QtCore import QThreadPool, QFile, QIODevice, QTextStream
 from queue import Queue
 
 # Custom imports #
@@ -29,7 +29,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actionSave.triggered.connect(self.save_file)
 
         axes = self.canvas.figure.add_subplot(1, 1, 1)
-        line2, = axes.plot([], [])
+        line_temp,   = axes.plot([], [], '*r')
+        line_target, = axes.plot([], [], '*b')
 
         # Temporarily create the figure here and pass it to the view thread.
         # fig = plt.figure()
@@ -41,13 +42,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # Visualization Worker Thread, started as soon as
         # the thread pool is started. Pass the figure to plot on.
         # self.viewWo = ViewWorker(self.serialRxQu, fig, line1) # debug with an external figure.
-        self.viewWo = ViewWorker(self.serialRxQu, self.canvas.figure, line2,
+        self.viewWo = ViewWorker(self.serialRxQu, self.canvas.figure, line_temp, line_target,
                                  self.actual_temp_label,
                                  self.actual_time_label,
                                  self.actual_target_label)
 
         self.threadpool = QThreadPool()
-        self.threadpool.start(self.viewWo)
+        # self.threadpool.start(self.viewWo)
 
     def handle_refresh_button(self):
         """Get list of serial ports available."""
@@ -82,9 +83,9 @@ class MainWindow(QtWidgets.QMainWindow):
                                                                      self.tr("~/Desktop/"),
                                                                      self.tr("CSV (*.csv)"))
         print(save_file_path)
-        # f = QFile(save_file_path)
-        # try:
-        #     f.open()
+        if save_file_path[0] != "":
+            self.viewWo.save_csv_file(save_file_path[0])
+
 
     # Debug function
     # def text_changed(self):
