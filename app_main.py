@@ -48,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                  self.actual_target_label)
 
         self.threadpool = QThreadPool()
-        # self.threadpool.start(self.viewWo)
+        self.threadpool.start(self.viewWo)
 
     def handle_refresh_button(self):
         """Get list of serial ports available."""

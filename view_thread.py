@@ -35,21 +35,14 @@ class ViewWorker(QRunnable):
         while True:
             if not self.serialQueue.empty():
                 try:
-                    residual_string = residual_string + self.serialQueue.get(block=False)
+                    element = self.serialQueue.get(block=False)
                     # print(residual_string) #debug
-                except BlockingIOError:
-                    pass
-            if residual_string:
-                processed_string = ""
-                res_split = residual_string.splitlines()
-                if res_split:
-                    print(res_split) #debug
-                    matcher_str = "^[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*"
-                    while res_split:
-                        element = res_split.pop(0)
+                    if element:
+                        processed_string = ""
+                        matcher_str = "^[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*"
                         if re.match(matcher_str, element):
                             [time, temp, target, duty_cycle] = element.split(",")
-                            time_sec = float(time)/1000
+                            time_sec = float(time) / 1000
                             temp_c = float(temp)
                             target_c = float(target)
                             time_ls.append(time_sec)
@@ -66,8 +59,8 @@ class ViewWorker(QRunnable):
                             max_x = max(self.lin.get_xdata())
                             min_y = min(min(self.lin.get_ydata()), min(self.lin_target.get_ydata()))
                             max_y = max(max(self.lin.get_ydata()), max(self.lin_target.get_ydata()))
-                            min_y = (abs(min_y)/min_y - 0.05) * abs(min_y)
-                            max_y = (abs(max_y)/max_y + 0.05) * abs(max_y)
+                            min_y = (abs(min_y) / min_y - 0.05) * abs(min_y)
+                            max_y = (abs(max_y) / max_y + 0.05) * abs(max_y)
                             if min_x == max_x:
                                 max_x = max_x + 1
                             if min_y == max_y:
@@ -76,12 +69,9 @@ class ViewWorker(QRunnable):
                             self.lin.axes.set_ylim(min_y, max_y)
                             self.fi.canvas.draw()
                             self.fi.canvas.flush_events()
-                        else:
-                            if re.match("^[0-9]", element):
-                                ''' Catch the residual part of the string and the 
-                                    next part of the string will be attached to it. '''
-                                processed_string = element
-                    residual_string = processed_string
+                except BlockingIOError:
+                    pass
+
             if self.save_file:
                 f = QFile(self.save_filename)
                 try:
