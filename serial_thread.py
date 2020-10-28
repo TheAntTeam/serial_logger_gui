@@ -54,10 +54,23 @@ class SerialWorker(QRunnable):
                     if bytes_to_read:
                         data_out = self.serial_ch.active_port.read(bytes_to_read)
                         if data_out:
-                            # print(data_out.decode("utf-8", "ignore"))
-                            res_split = data_out.decode("utf-8", "ignore").splitlines(True)
+                            print("data in: ")
+                            print(data_out.decode("utf-8", "ignore"))
+                            residual_string = residual_string + data_out.decode("utf-8", "ignore")
+                            print("Residual string: ")
+                            print(residual_string)
+                            res_split = residual_string.splitlines(True)
+                            print("Res split: ")
                             print(res_split)
-                            self.serialQueue.put(data_out.decode("utf-8", "ignore"))
+                            residual_string = ""
+                            while res_split:
+                                element = res_split.pop(0)
+                                if '\n' in element:
+                                    self.serialQueue.put(element)
+                                else:
+                                    residual_string = element
+                            print("Final residual string: ")
+                            print(residual_string)
 
     def thread_is_started(self):
         """This function is to ensure to create the serial
