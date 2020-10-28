@@ -48,6 +48,7 @@ class SerialWorker(QRunnable):
                 if self.close_it:
                     self.serial_ch.close()
                     self.close_it = False
+                    residual_string = ""
             else:
                 if self.serial_ch.active_port_is_open():
                     bytes_to_read = self.serial_ch.active_port.in_waiting  # Checking data byte size
