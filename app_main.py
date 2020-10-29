@@ -22,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Momentarily choose to load the ui from file for flexibility during
         # development, eventually it could be converted in a .py if stable.
-        uic.loadUi("test_serial.ui", self)
+        uic.loadUi("temperature_target_graph.ui", self)
         self.refreshButton.clicked.connect(self.handle_refresh_button)
         self.connectButton.clicked.connect(self.handle_connect_button)
         self.disconnectButton.clicked.connect(self.handle_disconnect_button)
@@ -31,13 +31,6 @@ class MainWindow(QtWidgets.QMainWindow):
         axes = self.canvas.figure.add_subplot(1, 1, 1)
         line_temp,   = axes.plot([], [], '*r')
         line_target, = axes.plot([], [], '*b')
-
-        # Temporarily create the figure here and pass it to the view thread.
-        # fig = plt.figure()
-        # ax = fig.add_subplot(111)
-        # ax.autoscale()
-        # line1,  = ax.plot([], [])
-        # fig.show()
 
         # Visualization Worker Thread, started as soon as
         # the thread pool is started. Pass the figure to plot on.
