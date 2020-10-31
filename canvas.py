@@ -1,6 +1,5 @@
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
-from qtpy import QtWidgets
 
 
 class MplCanvas(FigureCanvasQTAgg):
