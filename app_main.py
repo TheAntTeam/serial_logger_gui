@@ -29,8 +29,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actionSave.triggered.connect(self.save_file)
 
         axes = self.canvas.figure.add_subplot(1, 1, 1)
-        line_temp,   = axes.plot([], [], '*r')
-        line_target, = axes.plot([], [], '*b')
+        line_temp,   = axes.plot([], [], 'r')
+        line_target, = axes.plot([], [], 'b')
 
         # Visualization Worker Thread, started as soon as
         # the thread pool is started. Pass the figure to plot on.
