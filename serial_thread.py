@@ -16,7 +16,7 @@ class SerialWorker(QRunnable):
         self.no_serial_worker = True        # It checks that thread is created once
         self.close_it = False               # It is used to demand closure to runner
         self.serialQueue = serial_rx_queue  # FIFO RX Queue to pass data to view thread
-        self.text_out = text_field
+        self.text_out = text_field          # Gui text field where events are logged
 
     def get_port_list(self):
         """Return serial port list."""

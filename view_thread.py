@@ -4,7 +4,7 @@ import re
 
 class ViewWorker(QRunnable):
     """View Worker thread"""
-    def __init__(self, serial_rx_queue, fig, line_temp, line_target, actual_temp_label, actual_time_label, actual_target_label, *args, **kwargs):
+    def __init__(self, serial_rx_queue, fig, line_temp, line_target, actual_temp_label, actual_time_label, actual_target_label, text_field, *args, **kwargs):
         super(ViewWorker, self).__init__()
         self.args = args
         self.kwargs = kwargs
@@ -17,6 +17,7 @@ class ViewWorker(QRunnable):
         self.target_label = actual_target_label
         self.save_file = False
         self.save_filename = ""
+        self.text_out = text_field  # Gui text field where events are logged
 
     def save_csv_file(self, file_name):
         """Save csv file."""
@@ -25,8 +26,8 @@ class ViewWorker(QRunnable):
 
     @Slot()
     def run(self):
-        print("Init View Worker Thread")
-        residual_string = ""
+        # print("Init View Worker Thread")
+        # self.text_out.append("Init View Worker Thread")
         time_ls = []
         temp_ls = []
         target_ls = []
@@ -36,9 +37,7 @@ class ViewWorker(QRunnable):
             if not self.serialQueue.empty():
                 try:
                     element = self.serialQueue.get(block=False)
-                    # print(residual_string) #debug
                     if element:
-                        processed_string = ""
                         matcher_str = "^[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*"
                         if re.match(matcher_str, element):
                             [time, temp, target, duty_cycle] = element.split(",")
@@ -81,5 +80,6 @@ class ViewWorker(QRunnable):
                             QTextStream(f) << '{0}, {1}, {2}\n'.format(time_ls[i], temp_ls[i], target_ls[i])
                     f.close()
                 except FileNotFoundError:
-                    print("File not found or not accessible")
+                    # print("File not found or not accessible")
+                    self.text_out.append("File not found or not accessible")
                 self.save_file = False

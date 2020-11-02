@@ -42,7 +42,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.viewWo = ViewWorker(self.serialRxQu, self.canvas.figure, line_temp, line_target,
                                  self.actual_temp_label,
                                  self.actual_time_label,
-                                 self.actual_target_label)
+                                 self.actual_target_label,
+                                 self.textEdit)
         # serial Worker Thread
         self.serialWo = SerialWorker(self.serialRxQu, self.textEdit)
 
