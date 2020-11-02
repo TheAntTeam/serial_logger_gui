@@ -8,7 +8,7 @@ class SerialWorker(QRunnable):
     """Serial Worker thread"""
     serial_ch = SerialChannel()
 
-    def __init__(self, serial_rx_queue, *args, **kwargs):
+    def __init__(self, serial_rx_queue, text_field, *args, **kwargs):
         super(SerialWorker, self).__init__()
         self.args = args                    # Unused at the moment
         self.kwargs = kwargs                # Unused at the moment
@@ -16,6 +16,7 @@ class SerialWorker(QRunnable):
         self.no_serial_worker = True        # It checks that thread is created once
         self.close_it = False               # It is used to demand closure to runner
         self.serialQueue = serial_rx_queue  # FIFO RX Queue to pass data to view thread
+        self.text_out = text_field
 
     def get_port_list(self):
         """Return serial port list."""
@@ -23,25 +24,28 @@ class SerialWorker(QRunnable):
 
     def open_port(self, port):
         """Open passed serial port."""
-        print("Open " + port)
+        # print("Open " + port)
+        self.text_out.append("Opening " + port)
         try:
             self.serial_ch.open(port)
         except IOError:
-            print("COM port already in use.")
-            pass
+            # print("COM port already in use.")
+            self.text_out.append("COM port already in use.")
 
     def close_port(self):
         """Pause the thread from reading the serial port and close it.
            The closing of the serial port is demanded to the runner
            function to avoid side effects."""
-        print("Close " + self.serial_ch.active_port.name)
+        # print("Close " + self.serial_ch.active_port.name)
+        self.text_out.append("Closing " + self.serial_ch.active_port.name)
         self.is_paused = True
         self.close_it = True
 
     @Slot()
     def run(self):
         """Serial Worker Runner function."""
-        print("Init Serial Worker Thread")
+        # print("Init Serial Worker Thread")
+        # self.text_out.append("Init Serial Worker Thread")
         residual_string = ""
         while True:
             if self.is_paused:

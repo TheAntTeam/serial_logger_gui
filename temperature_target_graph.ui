@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>798</width>
-    <height>455</height>
+    <width>832</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>151</width>
+      <width>181</width>
       <height>161</height>
      </rect>
     </property>
@@ -90,7 +90,7 @@
      <rect>
       <x>10</x>
       <y>180</y>
-      <width>151</width>
+      <width>181</width>
       <height>201</height>
      </rect>
     </property>
@@ -102,8 +102,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>147</width>
-       <height>197</height>
+       <width>179</width>
+       <height>199</height>
       </rect>
      </property>
      <widget class="QTextEdit" name="textEdit">
@@ -112,7 +112,7 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>-7</x>
+        <x>10</x>
         <y>0</y>
         <width>161</width>
         <height>201</height>
@@ -137,7 +137,7 @@
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>330</x>
       <y>90</y>
       <width>120</width>
       <height>80</height>
@@ -147,7 +147,7 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>60</y>
       <width>601</width>
       <height>341</height>
@@ -169,7 +169,7 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>171</x>
+      <x>201</x>
       <y>9</y>
       <width>601</width>
       <height>51</height>
@@ -286,8 +286,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>798</width>
-     <height>20</height>
+     <width>832</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
