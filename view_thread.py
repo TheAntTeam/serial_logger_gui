@@ -38,36 +38,40 @@ class ViewWorker(QRunnable):
                 try:
                     element = self.serialQueue.get(block=False)
                     if element:
-                        matcher_str = "^[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*,[0-9]*.?[0-9]*"
+                        matcher_str = "^[0-9]+.?[0-9]*,[0-9]+.?[0-9]*,[0-9]+.?[0-9]*,[0-9]+.?[0-9]*"
                         if re.match(matcher_str, element):
                             [time, temp, target, duty_cycle] = element.split(",")
                             time_sec = float(time) / 1000
-                            temp_c = float(temp)
-                            target_c = float(target)
-                            time_ls.append(time_sec)
-                            temp_ls.append(temp_c)
-                            target_ls.append(target_c)
-                            self.lin.set_xdata(time_ls)
-                            self.lin.set_ydata(temp_ls)
-                            self.lin_target.set_xdata(time_ls)
-                            self.lin_target.set_ydata(target_ls)
-                            self.time_label.setText(format(time_sec, '.1f'))
-                            self.temp_label.setText(format(temp_c, '.2f'))  # Set the label with a float with 2 decimals
-                            self.target_label.setText(format(target_c, '.2f'))
-                            min_x = min(self.lin.get_xdata())
-                            max_x = max(self.lin.get_xdata())
-                            min_y = min(min(self.lin.get_ydata()), min(self.lin_target.get_ydata()))
-                            max_y = max(max(self.lin.get_ydata()), max(self.lin_target.get_ydata()))
-                            min_y = (abs(min_y) / min_y - 0.05) * abs(min_y)
-                            max_y = (abs(max_y) / max_y + 0.05) * abs(max_y)
-                            if min_x == max_x:
-                                max_x = max_x + 1
-                            if min_y == max_y:
-                                max_y = max_y + 1
-                            self.lin.axes.set_xlim(min_x, max_x)
-                            self.lin.axes.set_ylim(min_y, max_y)
-                            self.fi.canvas.draw()
-                            self.fi.canvas.flush_events()
+                            """ This check is added to make the graph more robust to wrongly formed strings.        ###
+                            ### As an example the first value could be truncated, also if it is a number.           ### 
+                            ### It's not comprehensive of all the checks possible, but for our scopes this will do. """
+                            if (time_sec > 0) and ((not time_ls) or (time_sec > time_ls[-1])):
+                                temp_c = float(temp)
+                                target_c = float(target)
+                                time_ls.append(time_sec)
+                                temp_ls.append(temp_c)
+                                target_ls.append(target_c)
+                                self.lin.set_xdata(time_ls)
+                                self.lin.set_ydata(temp_ls)
+                                self.lin_target.set_xdata(time_ls)
+                                self.lin_target.set_ydata(target_ls)
+                                self.time_label.setText(format(time_sec, '.1f'))
+                                self.temp_label.setText(format(temp_c, '.2f'))  # Set the label with a float with 2 decimals
+                                self.target_label.setText(format(target_c, '.2f'))
+                                min_x = min(self.lin.get_xdata())
+                                max_x = max(self.lin.get_xdata())
+                                min_y = min(min(self.lin.get_ydata()), min(self.lin_target.get_ydata()))
+                                max_y = max(max(self.lin.get_ydata()), max(self.lin_target.get_ydata()))
+                                min_y = (abs(min_y) / min_y - 0.05) * abs(min_y)
+                                max_y = (abs(max_y) / max_y + 0.05) * abs(max_y)
+                                if min_x == max_x:
+                                    max_x = max_x + 1
+                                if min_y == max_y:
+                                    max_y = max_y + 1
+                                self.lin.axes.set_xlim(min_x, max_x)
+                                self.lin.axes.set_ylim(min_y, max_y)
+                                self.fi.canvas.draw()
+                                self.fi.canvas.flush_events()
                 except BlockingIOError:
                     pass
 
