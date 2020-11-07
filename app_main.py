@@ -1,22 +1,23 @@
 import sys
 import os
-# Choose 'pyqt5' or 'pyside2'
+""" Choose 'pyqt5' or 'pyside2' """
 os.environ['QT_API'] = 'pyside2'
-# Imports from qtpy #
 from qtpy import QtWidgets, uic
 from qtpy.QtCore import QThreadPool, QFile, QIODevice, QTextStream
 from queue import Queue
 from qtpy.QtWidgets import QMainWindow
-# Custom imports #
+""" Custom imports """
 from serial_thread import SerialWorker
 from view_thread import ViewWorker
+from temperature_target_graph import Ui_MainWindow
 
-
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        # Momentarily choose to load the ui from file for flexibility during
-        # development, eventually it could be converted in a .py if stable.
-        uic.loadUi("temperature_target_graph.ui", self)
+""" The Following class is just used to load the UI instead of using the generated Ui_MainWindow. *** 
+*** If you want to use it uncomment it and comment the import of the UI_MainWindow.               """
+# class Ui_MainWindow(object):
+#     def setupUi(self, MainWindow):
+#         # Momentarily choose to load the ui from file for flexibility during
+#         # development, eventually it could be converted in a .py if stable.
+#         uic.loadUi("temperature_target_graph.ui", self)
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
