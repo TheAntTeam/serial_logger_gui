@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>832</width>
-    <height>466</height>
+    <width>1066</width>
+    <height>644</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,7 +91,7 @@
       <x>10</x>
       <y>180</y>
       <width>181</width>
-      <height>201</height>
+      <height>421</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -103,7 +103,7 @@
        <x>0</x>
        <y>0</y>
        <width>179</width>
-       <height>199</height>
+       <height>419</height>
       </rect>
      </property>
      <widget class="QTextEdit" name="textEdit">
@@ -112,10 +112,10 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>0</x>
         <y>0</y>
-        <width>161</width>
-        <height>201</height>
+        <width>181</width>
+        <height>421</height>
        </rect>
       </property>
      </widget>
@@ -149,15 +149,15 @@
      <rect>
       <x>200</x>
       <y>60</y>
-      <width>601</width>
-      <height>341</height>
+      <width>851</width>
+      <height>541</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="canvasGridLayout">
      <item row="0" column="0">
       <widget class="MplCanvas" name="canvas" native="true">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>60</horstretch>
          <verstretch>40</verstretch>
         </sizepolicy>
@@ -171,7 +171,7 @@
      <rect>
       <x>201</x>
       <y>9</y>
-      <width>601</width>
+      <width>851</width>
       <height>51</height>
      </rect>
     </property>
@@ -286,7 +286,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>832</width>
+     <width>1066</width>
      <height>21</height>
     </rect>
    </property>
@@ -296,7 +296,15 @@
     </property>
     <addaction name="actionSave"/>
    </widget>
+   <widget class="QMenu" name="menuStyle">
+    <property name="title">
+     <string>Style</string>
+    </property>
+    <addaction name="actionClassic"/>
+    <addaction name="actionFusion"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuStyle"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave">
@@ -305,6 +313,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionClassic">
+   <property name="text">
+    <string>Classic</string>
+   </property>
+  </action>
+  <action name="actionFusion">
+   <property name="text">
+    <string>Fusion</string>
    </property>
   </action>
  </widget>

@@ -3,12 +3,13 @@ import os
 """ Choose 'pyqt5' or 'pyside2' """
 os.environ['QT_API'] = 'pyside2'
 from qtpy import QtWidgets, uic
-from qtpy.QtCore import QThreadPool, QFile, QIODevice, QTextStream
+from qtpy.QtCore import QThreadPool
 from queue import Queue
 from qtpy.QtWidgets import QMainWindow
 """ Custom imports """
 from serial_thread import SerialWorker
 from view_thread import ViewWorker
+from style_manager import StyleManager
 from temperature_target_graph import Ui_MainWindow
 
 """ The Following class is just used to load the UI instead of using the generated Ui_MainWindow. *** 
@@ -70,13 +71,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
            creates the serial worker thread. If the thread was
            already created previously and paused, it revives it."""
         # print(self.serialPortsComboBox.currentText())
-        self.serialWo.open_port(self.serialPortsComboBox.currentText())
-        if self.serialWo.no_serial_worker:
-            self.serialWo.revive_it()
-            self.threadpool.start(self.serialWo)
-            self.serialWo.thread_is_started()
-        if self.serialWo.is_paused:
-            self.serialWo.revive_it()
+        if self.serialWo.open_port(self.serialPortsComboBox.currentText()):
+            if self.serialWo.no_serial_worker:
+                self.serialWo.revive_it()
+                self.threadpool.start(self.serialWo)
+                self.serialWo.thread_is_started()
+            if self.serialWo.is_paused:
+                self.serialWo.revive_it()
 
     def handle_disconnect_button(self):
         """Disconnect button closes the serial port."""
@@ -95,6 +96,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    style_man = StyleManager(app)
     window = MainWindow()
     window.show()
     app.exec_()
