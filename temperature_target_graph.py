@@ -26,6 +26,8 @@ class Ui_MainWindow(object):
         self.actionClassic = QAction(MainWindow)
         self.actionClassic.setObjectName(u"actionClassic")
         self.actionClassic.setCheckable(True)
+        self.actionClassic.setChecked(True)
+        self.actionClassic.setMenuRole(QAction.TextHeuristicRole)
         self.actionFusion = QAction(MainWindow)
         self.actionFusion.setObjectName(u"actionFusion")
         self.actionFusion.setCheckable(True)
@@ -172,8 +174,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuStyle.menuAction())
         self.menuFile.addAction(self.actionSave)
-        self.menuStyle.addAction(self.actionClassic)
-        self.menuStyle.addAction(self.actionFusion)
 
         self.retranslateUi(MainWindow)
 

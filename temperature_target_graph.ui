@@ -303,8 +303,6 @@
     <property name="title">
      <string>Style</string>
     </property>
-    <addaction name="actionClassic"/>
-    <addaction name="actionFusion"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuStyle"/>
@@ -322,8 +320,14 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Classic</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
   <action name="actionFusion">

@@ -1,24 +1,20 @@
 import sys
-import os
-""" Choose 'pyqt5' or 'pyside2' """
-os.environ['QT_API'] = 'pyside2'
+import common_environ_set  # This is where I stored the environment variable selecting pyside2
 from qtpy import QtWidgets, uic
 from qtpy.QtCore import QThreadPool
 from queue import Queue
-from qtpy.QtWidgets import QMainWindow
+from qtpy.QtWidgets import QMainWindow, QActionGroup, QAction
 """ Custom imports """
 from serial_thread import SerialWorker
 from view_thread import ViewWorker
 from style_manager import StyleManager
 from temperature_target_graph import Ui_MainWindow
 
-""" The Following class is just used to load the UI instead of using the generated Ui_MainWindow. *** 
-*** If you want to use it uncomment it and comment the import of the UI_MainWindow.               """
-# class Ui_MainWindow(object):
-#     def setupUi(self, MainWindow):
-#         # Momentarily choose to load the ui from file for flexibility during
-#         # development, eventually it could be converted in a .py if stable.
-#         uic.loadUi("temperature_target_graph.ui", self)
+""" The Following class is just used to load the UI instead of using the generated Ui_MainWindow.  *** 
+*** If you want to use it uncomment it. You don't need to comment the import of the UI_MainWindow. """
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        uic.loadUi("temperature_target_graph.ui", self)
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -35,6 +31,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connectButton.clicked.connect(self.handle_connect_button)
         self.disconnectButton.clicked.connect(self.handle_disconnect_button)
         self.actionSave.triggered.connect(self.save_file)
+        self.style_group = QActionGroup(self)
+        self.style_list = style_man.list_styles()
+        if self.style_list:
+            default_style = self.style_list[0]
+        for st in self.style_list:
+            style_action = QAction(self)
+            style_action.setObjectName(st)
+            style_action.setCheckable(True)
+            style_action.setText(st)
+            if st == default_style:
+                style_action.setChecked(True)
+            self.menuStyle.addAction(style_action)
+            self.style_group.addAction(style_action)
+        self.style_group.triggered.connect(self.select_style)
 
         axes = self.canvas.figure.add_subplot(1, 1, 1)
         line_temp,   = axes.plot([], [], 'r')
@@ -56,7 +66,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """Get list of serial ports available."""
         ls = self.serialWo.get_port_list()
         if ls:
-            #print(ls)
+            # print(ls)
             self.textEdit.append("Listing serial ports: ")
             self.textEdit.append(str(ls))
             self.serialPortsComboBox.clear()
@@ -84,14 +94,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.serialWo.close_port()
 
     def save_file(self):
-        save_file_path = QtWidgets.QFileDialog.getSaveFileName(self, self.tr("Load Image"),
-                                                                     self.tr("~/Desktop/"),
+        save_file_path = QtWidgets.QFileDialog.getSaveFileName(self, self.tr("Save Values in a Comma Separated Value file"),
+                                                                     self.tr("."),
                                                                      self.tr("CSV (*.csv)"))
         # print(save_file_path)
         self.textEdit.append("Saving file: ")
         self.textEdit.append(save_file_path[0])
         if save_file_path[0] != "":
             self.viewWo.save_csv_file(save_file_path[0])
+
+    def select_style(self):
+        style_man.change_style(self.style_group.checkedAction().text())
 
 
 if __name__ == "__main__":
