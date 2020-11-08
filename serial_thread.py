@@ -23,14 +23,20 @@ class SerialWorker(QRunnable):
         return self.serial_ch.get_available_ports()
 
     def open_port(self, port):
-        """Open passed serial port."""
-        # print("Open " + port)
-        self.text_out.append("Opening " + port)
-        try:
-            self.serial_ch.open(port)
-        except IOError:
-            # print("COM port already in use.")
-            self.text_out.append("COM port already in use.")
+        """Open passed serial port. Return outcome of operation. True if success, otherwise False. """
+        if port:
+            # print("Open " + port)
+            self.text_out.append("Opening " + port)
+            try:
+                self.serial_ch.open(port)
+                return True
+            except IOError:
+                # print("COM port already in use.")
+                self.text_out.append("COM port already in use.")
+                return False
+        else:
+            self.text_out.append("No port selected.")
+            return False
 
     def close_port(self):
         """Pause the thread from reading the serial port and close it.
