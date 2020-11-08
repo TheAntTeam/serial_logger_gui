@@ -20,12 +20,15 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1066, 644)
+        MainWindow.setLocale(QLocale(QLocale.English, QLocale.UnitedStates))
         self.actionSave = QAction(MainWindow)
         self.actionSave.setObjectName(u"actionSave")
         self.actionClassic = QAction(MainWindow)
         self.actionClassic.setObjectName(u"actionClassic")
+        self.actionClassic.setCheckable(True)
         self.actionFusion = QAction(MainWindow)
         self.actionFusion.setObjectName(u"actionFusion")
+        self.actionFusion.setCheckable(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayoutWidget = QWidget(self.centralwidget)
@@ -178,7 +181,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Temperature Serial Logger", None))
         self.actionSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
 #if QT_CONFIG(shortcut)
         self.actionSave.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+S", None))

@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Temperature Serial Logger</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="verticalLayoutWidget">
@@ -316,11 +319,17 @@
    </property>
   </action>
   <action name="actionClassic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Classic</string>
    </property>
   </action>
   <action name="actionFusion">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Fusion</string>
    </property>
