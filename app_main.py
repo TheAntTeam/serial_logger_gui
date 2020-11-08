@@ -3,7 +3,7 @@ import common_environ_set  # This is where I stored the environment variable sel
 from qtpy import QtWidgets, uic
 from qtpy.QtCore import QThreadPool
 from queue import Queue
-from qtpy.QtWidgets import QMainWindow, QActionGroup, QAction
+from qtpy.QtWidgets import QMainWindow, QActionGroup
 """ Custom imports """
 from serial_thread import SerialWorker
 from view_thread import ViewWorker
@@ -32,18 +32,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.disconnectButton.clicked.connect(self.handle_disconnect_button)
         self.actionSave.triggered.connect(self.save_file)
         self.style_group = QActionGroup(self)
-        self.style_list = style_man.list_styles()
-        if self.style_list:
-            default_style = self.style_list[0]
-        for st in self.style_list:
-            style_action = QAction(self)
-            style_action.setObjectName(st)
-            style_action.setCheckable(True)
-            style_action.setText(st)
-            if st == default_style:
-                style_action.setChecked(True)
-            self.menuStyle.addAction(style_action)
-            self.style_group.addAction(style_action)
+        style_man.add_styles_to_menu(self, self.menuStyle, self.style_group)
         self.style_group.triggered.connect(self.select_style)
 
         axes = self.canvas.figure.add_subplot(1, 1, 1)
