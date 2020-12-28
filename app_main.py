@@ -32,8 +32,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.disconnectButton.clicked.connect(self.handle_disconnect_button)
         self.actionSave.triggered.connect(self.save_file)
         self.style_group = QActionGroup(self)
-        style_man.add_styles_to_menu(self, self.menuStyle, self.style_group)
+        self.palette_group = QActionGroup(self)
+        style_man.add_styles_to_menu(self, self.menuStyle, self.style_group, self.palette_group)
         self.style_group.triggered.connect(self.select_style)
+        self.palette_group.triggered.connect(self.select_palette)
 
         axes = self.canvas.figure.add_subplot(1, 1, 1)
         line_temp,   = axes.plot([], [], 'r')
@@ -94,6 +96,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def select_style(self):
         style_man.change_style(self.style_group.checkedAction().text())
+
+    def select_palette(self):
+        style_man.set_palette(self.style_group.checkedAction().text())
 
 
 if __name__ == "__main__":
