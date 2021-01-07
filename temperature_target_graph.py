@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from canvas import MplCanvas
+from canvas import PyQtGraphCanvas
 
 
 class Ui_MainWindow(object):
@@ -31,6 +31,9 @@ class Ui_MainWindow(object):
         self.actionFusion = QAction(MainWindow)
         self.actionFusion.setObjectName(u"actionFusion")
         self.actionFusion.setCheckable(True)
+        self.actionDark = QAction(MainWindow)
+        self.actionDark.setObjectName(u"actionDark")
+        self.actionDark.setCheckable(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayoutWidget = QWidget(self.centralwidget)
@@ -57,7 +60,7 @@ class Ui_MainWindow(object):
 
         self.refreshButton = QPushButton(self.verticalLayoutWidget)
         self.refreshButton.setObjectName(u"refreshButton")
-        self.refreshButton.setCheckable(True)
+        self.refreshButton.setCheckable(False)
 
         self.verticalLayout.addWidget(self.refreshButton)
 
@@ -96,7 +99,7 @@ class Ui_MainWindow(object):
         self.canvasGridLayout = QGridLayout(self.gridLayoutWidget)
         self.canvasGridLayout.setObjectName(u"canvasGridLayout")
         self.canvasGridLayout.setContentsMargins(0, 0, 0, 0)
-        self.canvas = MplCanvas(self.gridLayoutWidget)
+        self.canvas = PyQtGraphCanvas(self.gridLayoutWidget)
         self.canvas.setObjectName(u"canvas")
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(60)
@@ -188,6 +191,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.actionClassic.setText(QCoreApplication.translate("MainWindow", u"Classic", None))
         self.actionFusion.setText(QCoreApplication.translate("MainWindow", u"Fusion", None))
+        self.actionDark.setText(QCoreApplication.translate("MainWindow", u"Dark", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Serial Port", None))
 #if QT_CONFIG(tooltip)
         self.refreshButton.setToolTip(QCoreApplication.translate("MainWindow", u"Refresh serial port list.", None))

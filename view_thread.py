@@ -4,14 +4,13 @@ import re
 
 class ViewWorker(QRunnable):
     """View Worker thread"""
-    def __init__(self, serial_rx_queue, fig, line_temp, line_target, actual_temp_label, actual_time_label, actual_target_label, text_field, *args, **kwargs):
+    def __init__(self, serial_rx_queue, canvas, signal, actual_temp_label, actual_time_label, actual_target_label, text_field, *args, **kwargs):
         super(ViewWorker, self).__init__()
         self.args = args
         self.kwargs = kwargs
         self.serialQueue = serial_rx_queue
-        self.fi = fig
-        self.lin = line_temp
-        self.lin_target = line_target
+        self.canvas = canvas
+        self.signal = signal
         self.temp_label = actual_temp_label
         self.time_label = actual_time_label
         self.target_label = actual_target_label
@@ -51,27 +50,10 @@ class ViewWorker(QRunnable):
                                 time_ls.append(time_sec)
                                 temp_ls.append(temp_c)
                                 target_ls.append(target_c)
-                                self.lin.set_xdata(time_ls)
-                                self.lin.set_ydata(temp_ls)
-                                self.lin_target.set_xdata(time_ls)
-                                self.lin_target.set_ydata(target_ls)
                                 self.time_label.setText(format(time_sec, '.1f'))
                                 self.temp_label.setText(format(temp_c, '.2f'))  # Set the label with a float with 2 decimals
                                 self.target_label.setText(format(target_c, '.2f'))
-                                min_x = min(self.lin.get_xdata())
-                                max_x = max(self.lin.get_xdata())
-                                min_y = min(min(self.lin.get_ydata()), min(self.lin_target.get_ydata()))
-                                max_y = max(max(self.lin.get_ydata()), max(self.lin_target.get_ydata()))
-                                min_y = (abs(min_y) / min_y - 0.05) * abs(min_y)
-                                max_y = (abs(max_y) / max_y + 0.05) * abs(max_y)
-                                if min_x == max_x:
-                                    max_x = max_x + 1
-                                if min_y == max_y:
-                                    max_y = max_y + 1
-                                self.lin.axes.set_xlim(min_x, max_x)
-                                self.lin.axes.set_ylim(min_y, max_y)
-                                self.fi.canvas.draw()
-                                self.fi.canvas.flush_events()
+                                self.canvas.update_plot(time_ls, temp_ls, time_ls, target_ls, self.signal)
                 except BlockingIOError:
                     pass
 
@@ -87,3 +69,7 @@ class ViewWorker(QRunnable):
                     # print("File not found or not accessible")
                     self.text_out.append("File not found or not accessible")
                 self.save_file = False
+
+
+if __name__ == "__main__":
+    pass

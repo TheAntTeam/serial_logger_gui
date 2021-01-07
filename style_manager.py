@@ -72,3 +72,7 @@ class StyleManager:
         dark_palette.setColor(QPalette.Disabled, QPalette.Light, dark_gray)
 
         self.app_ptr.setPalette(dark_palette)
+
+
+if __name__ == "__main__":
+    pass

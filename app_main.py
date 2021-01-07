@@ -1,7 +1,7 @@
 import sys
 import common_environ_set  # This is where I stored the environment variable selecting pyside2
 from qtpy import QtWidgets, uic
-from qtpy.QtCore import QThreadPool
+from qtpy.QtCore import QThreadPool, Signal
 from queue import Queue
 from qtpy.QtWidgets import QMainWindow, QActionGroup
 """ Custom imports """
@@ -10,16 +10,18 @@ from view_thread import ViewWorker
 from style_manager import StyleManager
 from temperature_target_graph import Ui_MainWindow
 
+
 """ The Following class is just used to load the UI instead of using the generated Ui_MainWindow.  *** 
 *** If you want to use it uncomment it. You don't need to comment the import of the UI_MainWindow. """
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        uic.loadUi("temperature_target_graph.ui", self)
+# class Ui_MainWindow(object):
+#     def setupUi(self, MainWindow):
+#         uic.loadUi("temperature_target_graph.ui", self)
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     serialRxQu = Queue()                   # serial FIFO RX Queue
     serialWo = ""
+    signal = Signal(object, object, object, object)
 
     def __init__(self, *args, **kwargs):
         Ui_MainWindow.__init__(self)
@@ -37,12 +39,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.style_group.triggered.connect(self.select_style)
         self.palette_group.triggered.connect(self.select_palette)
 
-        axes = self.canvas.figure.add_subplot(1, 1, 1)
-        line_temp,   = axes.plot([], [], 'r')
-        line_target, = axes.plot([], [], 'b')
+        # self.signal.connect(lambda x1, y1, x2, y2: self.canvas.plot_data(x1, y1, x2, y2))
+        self.canvas.connect_signal(self.signal)
 
         # Visualization Worker Thread, started as soon as the thread pool is started. Pass the figure to plot on.
-        self.viewWo = ViewWorker(self.serialRxQu, self.canvas.figure, line_temp, line_target,
+        self.viewWo = ViewWorker(self.serialRxQu, self.canvas, self.signal,
                                  self.actual_temp_label,
                                  self.actual_time_label,
                                  self.actual_target_label,

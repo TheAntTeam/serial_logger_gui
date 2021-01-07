@@ -158,7 +158,7 @@
     </property>
     <layout class="QGridLayout" name="canvasGridLayout">
      <item row="0" column="0">
-      <widget class="MplCanvas" name="canvas" native="true">
+      <widget class="PyQtGraphCanvas" name="canvas" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>60</horstretch>
@@ -349,7 +349,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MplCanvas</class>
+   <class>PyQtGraphCanvas</class>
    <extends>QWidget</extends>
    <header>canvas</header>
    <container>1</container>

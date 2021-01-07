@@ -1,5 +1,5 @@
 import serial
-from serial.tools import list_ports
+from serial.tools.list_ports import comports
 
 
 class SerialChannel:
@@ -61,14 +61,9 @@ class SerialChannel:
 
     @staticmethod
     def _get_serial_ports():
-        # source: https://stackoverflow.com/questions/12090503/listing-available-com-ports-with-python
-        """ Lists serial port names
-			:raises EnvironmentError:
-				On unsupported or unknown platforms
-			:returns:
-				A list of the serial ports available on the system
-		"""
-        return [port.device for port in list_ports.comports()]
+        """ Lists serial port names """
+        # print(sorted([x[0] for x in comports()])) #debug print
+        return sorted([port.device for port in comports()])
 
     def get_available_ports(self):
         """Returns a lists of available serial port names."""
@@ -77,3 +72,7 @@ class SerialChannel:
     def active_port_is_open(self):
         """Return true if the active port is open, false otherwise."""
         return self.active_port.is_open
+
+
+if __name__ == "__main__":
+    pass
