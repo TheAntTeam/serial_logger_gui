@@ -76,8 +76,6 @@ class PyQtGraphCanvas(pg.GraphicsWindow):
 
         min_y = min(min(y1), min(y2))
         max_y = max(max(y1), max(y2))
-        print(x2[-1])
-        print(y2[-1])
         if self.y_min > min_y or self.y_max < max_y:
             if self.y_min > min_y:
                 if min_y != 0:
