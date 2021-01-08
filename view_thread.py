@@ -37,7 +37,7 @@ class ViewWorker(QRunnable):
                 try:
                     element = self.serialQueue.get(block=False)
                     if element:
-                        matcher_str = "^[0-9]+.?[0-9]*[eE]?[+]?[0-9]*,[0-9]+.?[0-9]*,[0-9]+.?[0-9]*,[0-9]+.?[0-9]*"
+                        matcher_str = "^[0-9]+.?[0-9]*[eE]?[+]?[0-9]*,-?[0-9]+.?[0-9]*,-?[0-9]+.?[0-9]*,[0-9]+.?[0-9]*"
                         if re.match(matcher_str, element):
                             [time, temp, target, duty_cycle] = element.split(",")
                             time_sec = float(time) / 1000
