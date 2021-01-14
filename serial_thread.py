@@ -17,6 +17,7 @@ class SerialWorker(QRunnable):
         self.close_it = False               # It is used to demand closure to runner
         self.serialQueue = serial_rx_queue  # FIFO RX Queue to pass data to view thread
         self.text_out = text_field          # Gui text field where events are logged
+        self.finish_signal = False          # Thread termination signal
 
     def get_port_list(self):
         """Return serial port list."""
@@ -47,13 +48,17 @@ class SerialWorker(QRunnable):
         self.is_paused = True
         self.close_it = True
 
+    def terminate_thread(self):
+        """This function is to terminate thread."""
+        self.finish_signal = True
+
     @Slot()
     def run(self):
         """Serial Worker Runner function."""
         # print("Init Serial Worker Thread")
         # self.text_out.append("Init Serial Worker Thread")
         residual_string = ""
-        while True:
+        while not self.finish_signal:
             if self.is_paused:
                 if self.close_it:
                     self.serial_ch.close()

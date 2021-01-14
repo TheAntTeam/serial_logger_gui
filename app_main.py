@@ -22,6 +22,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     serialRxQu = Queue()                   # serial FIFO RX Queue
     serialWo = ""
     signal = Signal(object, object, object, object)
+    termination_signal = False
 
     def __init__(self, *args, **kwargs):
         Ui_MainWindow.__init__(self)
@@ -43,7 +44,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.connect_signal(self.signal)
 
         # Visualization Worker Thread, started as soon as the thread pool is started. Pass the figure to plot on.
-        self.viewWo = ViewWorker(self.serialRxQu, self.canvas, self.signal,
+        self.viewWo = ViewWorker(self.serialRxQu,
+                                 self.canvas,
+                                 self.signal,
                                  self.actual_temp_label,
                                  self.actual_time_label,
                                  self.actual_target_label,
@@ -53,6 +56,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.threadpool = QThreadPool()
         self.threadpool.start(self.viewWo)
+
+    def set_finish_signal(self):
+        self.viewWo.terminate_thread()
+        self.serialWo.terminate_thread()
+
+    def closeEvent(self, event):
+        self.set_finish_signal()
+        app.exit(0)
 
     def handle_refresh_button(self):
         """Get list of serial ports available."""
@@ -107,4 +118,4 @@ if __name__ == "__main__":
     style_man = StyleManager(app)
     window = MainWindow()
     window.show()
-    app.exec_()
+    sys.exit(app.exec_())

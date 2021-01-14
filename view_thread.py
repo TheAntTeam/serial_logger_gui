@@ -1,4 +1,4 @@
-from qtpy.QtCore import QRunnable, Slot, QFile, QIODevice, QTextStream
+from qtpy.QtCore import QRunnable, Slot, QFile, QIODevice, QTextStream, QObject, Signal
 import re
 
 
@@ -10,7 +10,6 @@ class ViewWorker(QRunnable):
         self.kwargs = kwargs
         self.serialQueue = serial_rx_queue
         self.canvas = canvas
-        self.signal = signal
         self.temp_label = actual_temp_label
         self.time_label = actual_time_label
         self.target_label = actual_target_label
@@ -18,10 +17,17 @@ class ViewWorker(QRunnable):
         self.save_filename = ""
         self.text_out = text_field  # Gui text field where events are logged
 
+        self.signal = signal
+        self.finish_signal = False  # Thread termination signal
+
     def save_csv_file(self, file_name):
         """Save csv file."""
         self.save_filename = file_name
         self.save_file = True
+
+    def terminate_thread(self):
+        """This function is to terminate thread."""
+        self.finish_signal = True
 
     @Slot()
     def run(self):
@@ -32,7 +38,7 @@ class ViewWorker(QRunnable):
         target_ls = []
         duty_cycle_ls = []
 
-        while True:
+        while not self.finish_signal:
             if not self.serialQueue.empty():
                 try:
                     element = self.serialQueue.get(block=False)
