@@ -36,6 +36,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionSave.triggered.connect(self.save_file)
         self.style_group = QActionGroup(self)
         self.palette_group = QActionGroup(self)
+        self.palette_group.setExclusive(False)
         style_man.add_styles_to_menu(self, self.menuStyle, self.style_group, self.palette_group)
         self.style_group.triggered.connect(self.select_style)
         self.palette_group.triggered.connect(self.select_palette)
@@ -110,12 +111,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         style_man.change_style(self.style_group.checkedAction().text())
 
     def select_palette(self):
-        style_man.set_palette(self.style_group.checkedAction().text())
+        style_man.set_palette()
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     style_man = StyleManager(app)
     window = MainWindow()
+    style_man.set_default_style()
+    style_man.set_default_palette()
     window.show()
     sys.exit(app.exec_())
