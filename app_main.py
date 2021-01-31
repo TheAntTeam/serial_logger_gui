@@ -20,7 +20,7 @@ from temperature_target_graph import Ui_MainWindow
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     serialRxQu = Queue()                   # serial FIFO RX Queue
-    serialWo = ""
+    serialWo = ""                          # todo: check if this is needed
     signal = Signal(object, object, object, object)
     termination_signal = False
 
@@ -59,10 +59,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.threadpool.start(self.viewWo)
 
     def set_finish_signal(self):
+        """Send signals to stop all threads."""
         self.viewWo.terminate_thread()
         self.serialWo.terminate_thread()
 
     def closeEvent(self, event):
+        """Before closing the application stop all threads and return ok code."""
         self.set_finish_signal()
         app.exit(0)
 
